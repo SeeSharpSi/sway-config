@@ -20,10 +20,12 @@ set $term foot
 # on the original workspace that the command was run on.
 set $menu dmenu_path | wmenu | xargs swaymsg exec --
 
+font pango:google-noto Medium 8
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in @datadir@/backgrounds/sway/)
-output * bg ~/Downloads/moon.jpg fill
+output * bg ~/Downloads/sky.jpg fill
 #
 # Example configuration:
 #
@@ -200,8 +202,9 @@ bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 
-bindsym XF86MonBrightnessDown exec xbacklight -dec 1
-bindsym XF86MonBrightnessUp exec xbacklight -inc 1
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+for_window [app_id="firefox" title="Picture-in-Picture"] floating enable
 
 #
 # Status Bar:
@@ -209,12 +212,16 @@ bindsym XF86MonBrightnessUp exec xbacklight -inc 1
 # Read `man 5 sway-bar` for more information about this section.
 bar {
     position top
+    # height 32 to sit directly below notch 
+    # height 8 to sit directly inside notch 
+    height 16
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
     # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
     # status_command while date +[$(cat /sys/class/power_supply/macsmc-battery/capacity)%]' %Y-%m-%d %X '; do sleep 1; done
-    status_command while date +[$(awk -F"[][]" '/Left:/ { print $2 }' <(amixer sget Master))]' '[$(cat /sys/class/power_supply/macsmc-battery/capacity)%]' %Y-%m-%d %X '; do sleep 1; done
+    # status_command while date +[' 'volume:' '$(awk -F"[][]" '/Left:/ { print $2 }' <(amixer sget Master))' ']' '[' 'batt:' '$(cat /sys/class/power_supply/macsmc-battery/capacity)%' ']' %Y-%m-%d %X '; do sleep 1; done
+    status_command while /home/silas/projects/bash/status.sh; do sleep 1; done
 
     colors {
         # statusline #ffffff
@@ -238,4 +245,5 @@ client.unfocused        "#26233a" "#26233a"      "#e0def4"   "#000000"     "#262
 
 # the end of my custom stuff
 
+title_align center
 include @sysconfdir@/sway/config.d/*
