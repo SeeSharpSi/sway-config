@@ -22,6 +22,9 @@ set $menu dmenu_path | wmenu | xargs swaymsg exec --
 
 font pango:google-noto Medium 8
 
+# move floating window to position
+set $move_cmd $HOME/.config/sway/sway_move.sh
+
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in @datadir@/backgrounds/sway/)
@@ -98,6 +101,9 @@ output * bg ~/Downloads/sky.jpg fill
     bindsym $mod+Down focus down
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
+
+    # move floating window around
+    bindsym $mod+p exec $move_cmd bottom-right
 
     # Move the focused window with the same, but add Shift
     bindsym $mod+Shift+$left move left
